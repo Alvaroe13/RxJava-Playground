@@ -6,6 +6,7 @@ import com.alvaro.rxjavaplayground.datasource.DummyDataSource;
 import com.alvaro.rxjavaplayground.model.Task;
 import com.alvaro.rxjavaplayground.repo.Repository;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +32,7 @@ public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModelTag";
 
 
-    public Observable<String> taskObservable;
+    public Observable<List<Task>> taskObservable;
     private final Repository repository;
 
     public MainViewModel(){
@@ -174,13 +175,26 @@ public class MainViewModel extends ViewModel {
 
     // "map"  operator does exactly that, a map operation. Aka, it retrieves an object type based
     // on the object pass as param. In this example it takes a Task object and it's returning a String
-    public void execute(){
+    /*public void execute(){
         Log.d(TAG, "MainViewModel: triggered execute");
         taskObservable = Observable
                 .fromIterable(DummyDataSource.Companion.getList())
                 .map(task -> task.getDescription() )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }*/
+
+    // "buffer" operator sends out the observables in bundles or list at the time of emiting
+    // to the MainActivity. In this example the expected value is Observable<List<Task>>>
+    //and each bundle is of size 2
+    public void execute(){
+        Log.d(TAG, "MainViewModel: triggered execute");
+        taskObservable = Observable
+                .fromIterable(DummyDataSource.Companion.getList())
+                .buffer(2) // -> size of bundle to send
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
     }
 
     //----------------------------- response from server ---------------------------//

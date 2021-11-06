@@ -5,13 +5,20 @@ import android.util.Log;
 
 import com.alvaro.rxjavaplayground.R;
 import com.alvaro.rxjavaplayground.model.Task;
+import com.jakewharton.rxbinding3.view.RxView;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import kotlin.Unit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         initViewModel();
         subscribeObserver();
+        RxBinding();
     }
 
     private void initViewModel() {
@@ -38,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     //response from DummyLocalData
     private void subscribeObserver(){
-        viewModel.taskObservable.subscribe(new Observer<String>() {
+
+        viewModel.taskObservable.subscribe(new Observer<List<Task>>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
                 disposable.add(d);
@@ -46,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNext(@NonNull String string) { //observable gate
-                printer("onNext called= " + string);
+            public void onNext(@NonNull List<Task> tasks) { //observable gate
+                printer("onNext called= " + tasks);
             }
 
             @Override
@@ -62,6 +71,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    //  RxView.clicks turns click event into RxObservable
+    private void RxBinding(){
+        RxView.clicks(findViewById(R.id.btn))
+                .map(unit -> 1)
+                .buffer(4 , TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Integer>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        printer("onSubscribe called");
+                    }
+
+                    @Override
+                    public void onNext(@NonNull List<Integer> integers) {
+                        printer("onNext called= " + integers);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        printer("onComplete called= ");
+                    }
+                });
     }
 
     //----------------------------- response from server ---------------------------//
