@@ -124,7 +124,7 @@ public class MainViewModel extends ViewModel {
 
     // --------------------------------- filter operator ----------------------------------//
 
-    // create observables when the predicate is met. In Other words operator "filter" filters out
+    // "filter" create observables when the predicate is met. In Other words operator "filter" filters out
     // the task that doesn't meet the predicate and are not sent out to the UI
     // filter operation is done in a background thread
     /*public void execute(){
@@ -136,17 +136,40 @@ public class MainViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread());
     } */
 
-    // Distinct filters out object when the predicate is met, in the example is "getDescription()"
+    // "Distinct" filters out object when the predicate is met, in the example is "getDescription()"
     // method returns a value that already exists in the data set, it gets filter out and is not
     // sent out to MainActivity as an Observable
-    public void execute(){
+    /*public void execute(){
         Log.d(TAG, "MainViewModel: triggered execute");
         taskObservable = Observable
                 .fromIterable(DummyDataSource.Companion.getList())
                 .distinct((Function<Task, String>) task -> task.getDescription()  )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }*/
+
+    // "take" takes a certain number of object from a data set, the number is specified through a param
+    /*public void execute(){
+        Log.d(TAG, "MainViewModel: triggered execute");
+        taskObservable = Observable
+                .fromIterable(DummyDataSource.Companion.getList())
+                .take(3)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }*/
+
+    // "takeWhile" tells RxJava to keep emiting object until predicate is met
+    // In this case, it will emit observables until "task.isComplete()" returns true, then it stops
+    public void execute(){
+        Log.d(TAG, "MainViewModel: triggered execute");
+        taskObservable = Observable
+                .fromIterable(DummyDataSource.Companion.getList())
+                .takeWhile(task -> task.isComplete()) // Predicate
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
+
+    // --------------------------------- transformation operator ----------------------------------//
 
 
 
