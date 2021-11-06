@@ -1,19 +1,17 @@
 package com.alvaro.rxjavaplayground.ui;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import okhttp3.ResponseBody;
-
 import android.os.Bundle;
 import android.util.Log;
 
 import com.alvaro.rxjavaplayground.R;
 import com.alvaro.rxjavaplayground.model.Task;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
         viewModel.execute();
     }
 
-    /*private void subscribeObserver(){
+
+    //response from DummyLocalData
+    private void subscribeObserver(){
         viewModel.taskObservable.subscribe(new Observer<Task>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNext(@NonNull Task longa) { //observable gate
-                printer("onNext called= " + longa);
+            public void onNext(@NonNull Task task) { //observable gate
+                printer("onNext called= " + task);
             }
 
             @Override
@@ -60,9 +60,14 @@ public class MainActivity extends AppCompatActivity {
                 printer("onComplete called");
             }
         });
-    }*/
 
-    private void subscribeObserver() {
+
+    }
+
+    //----------------------------- response from server ---------------------------//
+
+    //response from server
+    /*private void subscribeObserver() {
         viewModel.makeQuery().observe(this, responseBody -> {
             printer("this is a live data response!");
             try {
@@ -71,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 printer("Error= " + e.getMessage());
             }
         });
-    }
+    }*/
 
     void printer(String text) {
         Log.d(TAG, "printer: " + text);

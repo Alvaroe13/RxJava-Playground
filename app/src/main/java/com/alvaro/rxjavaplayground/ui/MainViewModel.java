@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
@@ -31,11 +32,13 @@ public class MainViewModel extends ViewModel {
 
 
     public Observable<Task> taskObservable;
-    private Repository repository;
+    private final Repository repository;
 
     public MainViewModel(){
         repository = Repository.getInstance();
     }
+
+    // --------------------------------- creation operator ----------------------------------//
 
    /*
    // in this case create one single operator
@@ -106,6 +109,7 @@ public class MainViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }*/
 
+    /*
     // create observable/s when a callback from database it's triggered
     public void execute(){
         Log.d(TAG, "MainViewModel: triggered execute");
@@ -116,11 +120,42 @@ public class MainViewModel extends ViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+    */
 
+    // --------------------------------- filter operator ----------------------------------//
 
-    public LiveData<ResponseBody> makeQuery(){
-        return repository.makeReactiveQuery();
+    // create observables when the predicate is met. In Other words operator "filter" filters out
+    // the task that doesn't meet the predicate and are not sent out to the UI
+    // filter operation is done in a background thread
+    /*public void execute(){
+        Log.d(TAG, "MainViewModel: triggered execute");
+        taskObservable = Observable
+                .fromIterable(DummyDataSource.Companion.getList())
+                .filter(task -> task.getDescription().equals("Walk the dog")) // sends if true, if false is not sent
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    } */
+
+    // Distinct filters out object when the predicate is met, in the example is "getDescription()"
+    // method returns a value that already exists in the data set, it gets filter out and is not
+    // sent out to MainActivity as an Observable
+    public void execute(){
+        Log.d(TAG, "MainViewModel: triggered execute");
+        taskObservable = Observable
+                .fromIterable(DummyDataSource.Companion.getList())
+                .distinct((Function<Task, String>) task -> task.getDescription()  )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
+
+
+
+    //----------------------------- response from server ---------------------------//
+
+    //response from server
+    /*public LiveData<ResponseBody> makeQuery(){
+        return repository.makeReactiveQuery();
+    }*/
 
 
     @Override

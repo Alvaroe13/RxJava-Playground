@@ -12,6 +12,7 @@ class DummyDataSource {
             this.add(Task(description = "Unload the dishwasher", isComplete = true, priority = 1))
             this.add(Task(description = "Walk the dog", isComplete = false, priority = 0))
             this.add(Task(description = "Make dinner", isComplete = true, priority = 5))
+            this.add(Task(description = "Make dinner", isComplete = true, priority = 5))
         }
 
         fun getArray(): Array<Task> =
