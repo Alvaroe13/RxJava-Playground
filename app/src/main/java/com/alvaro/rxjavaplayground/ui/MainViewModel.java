@@ -31,7 +31,7 @@ public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModelTag";
 
 
-    public Observable<Task> taskObservable;
+    public Observable<String> taskObservable;
     private final Repository repository;
 
     public MainViewModel(){
@@ -160,18 +160,28 @@ public class MainViewModel extends ViewModel {
 
     // "takeWhile" tells RxJava to keep emiting object until predicate is met
     // In this case, it will emit observables until "task.isComplete()" returns true, then it stops
-    public void execute(){
+    /*public void execute(){
         Log.d(TAG, "MainViewModel: triggered execute");
         taskObservable = Observable
                 .fromIterable(DummyDataSource.Companion.getList())
                 .takeWhile(task -> task.isComplete()) // Predicate
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-    }
+    }*/
 
     // --------------------------------- transformation operator ----------------------------------//
 
 
+    // "map"  operator does exactly that, a map operation. Aka, it retrieves an object type based
+    // on the object pass as param. In this example it takes a Task object and it's returning a String
+    public void execute(){
+        Log.d(TAG, "MainViewModel: triggered execute");
+        taskObservable = Observable
+                .fromIterable(DummyDataSource.Companion.getList())
+                .map(task -> task.getDescription() )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
     //----------------------------- response from server ---------------------------//
 

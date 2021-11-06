@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     //response from DummyLocalData
     private void subscribeObserver(){
-        viewModel.taskObservable.subscribe(new Observer<Task>() {
+        viewModel.taskObservable.subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(@NonNull Disposable d) {
                 disposable.add(d);
@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNext(@NonNull Task task) { //observable gate
-                printer("onNext called= " + task);
+            public void onNext(@NonNull String string) { //observable gate
+                printer("onNext called= " + string);
             }
 
             @Override
