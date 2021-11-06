@@ -187,7 +187,7 @@ public class MainViewModel extends ViewModel {
     // "buffer" operator sends out the observables in bundles or list at the time of emiting
     // to the MainActivity. In this example the expected value is Observable<List<Task>>>
     //and each bundle is of size 2
-    public void execute(){
+    /*public void execute(){
         Log.d(TAG, "MainViewModel: triggered execute");
         taskObservable = Observable
                 .fromIterable(DummyDataSource.Companion.getList())
@@ -195,6 +195,9 @@ public class MainViewModel extends ViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
+    }*/
+
+    public void execute(){
     }
 
     //----------------------------- response from server ---------------------------//
